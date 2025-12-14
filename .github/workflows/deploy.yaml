@@ -1,0 +1,36 @@
+# file: .github/workflows/deploy.yaml
+name: Infrastructure Deployment
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  plan:
+    if: github.event_name == 'pull_request'
+    # Consumes the centralized "Hard Gate" workflow
+    uses: rhyscraig/aws-workflows/.github/workflows/reusable-tf-plan.yaml@v1.0.0
+    with:
+      working-directory: .
+      environment: dev
+    secrets:
+      OIDC_ROLE_ARN: ${{ secrets.OIDC_ROLE_ARN }}
+      GH_PAT: ${{ secrets.GH_PAT }}
+      INFRACOST_API_KEY: ${{ secrets.INFRACOST_API_KEY }}
+
+  apply:
+    if: github.ref == 'refs/heads/main'
+    # Consumes the centralized Deployment workflow
+    uses: rhyscraig/aws-workflows/.github/workflows/reusable-tf-apply.yaml@v1.0.0
+    with:
+      working-directory: .
+      environment: production
+    secrets:
+      OIDC_ROLE_ARN: ${{ secrets.OIDC_ROLE_ARN }}
+      GH_PAT: ${{ secrets.GH_PAT }}

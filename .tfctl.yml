@@ -1,0 +1,31 @@
+version: 1
+
+# Global Settings (Inherits defaults from Registry)
+# Only override if you have a specific reason (e.g. strict local checks)
+check:
+  local:
+    checkov: "soft" # Warn locally, block in CI
+
+environments:
+  # ---------------------------------------------------------
+  # DEVELOPMENT
+  # ---------------------------------------------------------
+  dev:
+    account: "REPLACE_WITH_DEV_ACCOUNT_ID"
+    region: "eu-west-2"
+    role: "TerraformAccessRole"
+    auth_partner: "awsctl"
+    
+    # Secrets injection (Example)
+    # variable_sources:
+    #   - type: "aws_secrets_manager"
+    #     secret_arn: "arn:aws:secretsmanager:..."
+
+  # ---------------------------------------------------------
+  # PRODUCTION
+  # ---------------------------------------------------------
+  prod:
+    account: "REPLACE_WITH_PROD_ACCOUNT_ID"
+    region: "eu-west-2"
+    role: "TerraformAccessRole"
+    auth_partner: "awsctl"

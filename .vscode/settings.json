@@ -1,0 +1,17 @@
+{
+  "editor.formatOnSave": true,
+  "files.trimTrailingWhitespace": true,
+  "python.defaultInterpreterPath": "${env:HOME}/.local/pipx/venvs/tfctl/bin/python",
+  "terraform.languageServer.enabled": true,
+  
+  // MCP Configuration (for AI Agents)
+  "mcp.servers": {
+    "tfctl": {
+      "command": "tfctl",
+      "args": ["mcp"],
+      "env": {
+        "TFCTL_MODE": "ide"
+      }
+    }
+  }
+}
