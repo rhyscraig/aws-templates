@@ -14,12 +14,12 @@ permissions:
 jobs:
   # GATE 1: Security Scan
   security-scan:
-    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-secret-scan.yaml@v1.0.0
+    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-secret-scan.yaml@v2.0.0
 
   # GATE 2: Code Quality & Policy (TFCTL Doctor)
   code-quality:
     needs: [security-scan]
-    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-static-analysis.yml@v1.0.0
+    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-static-analysis.yml@v2.0.0
     with:
       working-directory: "."
     secrets:
@@ -28,7 +28,7 @@ jobs:
   # STEP 3: Plan
   plan:
     needs: [code-quality]
-    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-terraform-plan.yml@v1.0.0
+    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-terraform-plan.yml@v2.0.0
     with:
       org: "hcp"
       env: "prd"
@@ -49,7 +49,7 @@ jobs:
       actions: read
       id-token: write
       contents: write
-    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-slsa-provenance.yaml@v1.0.0
+    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-slsa-provenance.yaml@v2.0.0
     with:
       artifact-name: "tfplan-prd"
       artifact-sha256: "${{ needs.plan.outputs.plan_sha256 }}"
@@ -58,7 +58,7 @@ jobs:
   apply:
     needs: [provenance]
     if: github.ref == 'refs/heads/main'
-    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-terraform-apply.yml@v1.0.0
+    uses: rhyscraig/aws-terraform-platform-aws-workflows/.github/workflows/reusable-terraform-apply.yml@v2.0.0
     with:
       org: "hcp"
       env: "prd"
